@@ -1,0 +1,38 @@
+# Configuration for AI Trip Planner
+# Edit this file to customize the behavior without changing the code
+
+
+# ================================================================
+# Provider setting 
+# ================================================================
+
+provider: 
+  # Which provider to use: "openrouter" (recommended) or openai
+  default: openrouter
+  tier: general
+
+  openrouter_base_url: "https://api.openrouter.ai/v1"
+
+
+# ================================================================
+# LLM Defaults
+# ================================================================
+
+llm:
+  temperature: 0.0
+  max_tokens: 2000
+  streaming: false
+
+# ================================================================
+# Embedding Defaults
+# ================================================================
+
+embedding:
+  tier: small
+  batch_size: 100
+  show_progress: false
+
+
+
+
+  

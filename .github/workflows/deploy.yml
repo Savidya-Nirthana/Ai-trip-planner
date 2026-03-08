@@ -1,0 +1,64 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main # Trigger the workflow when code is pushed to the main branch
+  pull_request:
+    branches:
+      - main # Run CI tests on pull requests targeting main
+
+jobs:
+  test:
+    name: Run CI tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Add test commands here, for example:
+      # - name: Run Pytest
+      #   run: pytest tests/
+
+  deploy:
+    name: Deploy to EC2
+    needs: test # Depends on the test job passing
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Navigate to the project directory
+            cd ~/ai_trip_planner || git clone git@github.com:${{ github.repository }}.git ~/ai_trip_planner && cd ~/ai_trip_planner
+
+            # Pull the latest changes from the main branch
+            git pull origin main
+
+            # Set up a virtual environment if it doesn't exist
+            if [ ! -d ".venv" ]; then
+              python3 -m venv .venv
+            fi
+
+            # Activate virtual environment and install dependencies
+            source .venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+
+            # Restart the Streamlit service (requires setting up a systemd service on EC2)
+            sudo systemctl restart streamlit

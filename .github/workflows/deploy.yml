@@ -43,6 +43,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             # Install uv if not already installed
             if ! command -v uv &> /dev/null; then

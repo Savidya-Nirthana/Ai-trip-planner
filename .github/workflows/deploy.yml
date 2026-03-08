@@ -44,8 +44,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Navigate to the project directory
-            cd ~/ai_trip_planner || git clone git@github.com:${{ github.repository }}.git ~/ai_trip_planner && cd ~/ai_trip_planner
+            # Navigate to the project directory, or clone it if it doesn't exist
+            if [ ! -d ~/ai_trip_planner ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/ai_trip_planner
+            fi
+            cd ~/ai_trip_planner
 
             # Pull the latest changes from the main branch
             git pull origin main
@@ -60,5 +63,6 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            # Restart the Streamlit service (requires setting up a systemd service on EC2)
+            # Restart both services
+            sudo systemctl restart fastapi
             sudo systemctl restart streamlit

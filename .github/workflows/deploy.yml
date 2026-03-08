@@ -52,10 +52,10 @@ jobs:
             export PATH="$HOME/.cargo/bin:$PATH"
 
             # Clone repo if it doesn't exist, otherwise pull latest
-            if [ ! -d ~/ai_trip_planner ]; then
-              git clone https://github.com/${{ github.repository }}.git ~/ai_trip_planner
+            if [ ! -d ~/Ai-trip-planner ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/Ai-trip-planner
             fi
-            cd ~/ai_trip_planner
+            cd ~/Ai-trip-planner
 
             git pull origin main
 

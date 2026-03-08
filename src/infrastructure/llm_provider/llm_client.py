@@ -11,7 +11,11 @@ from typing import Optional, Any, Dict
 from langchain_openai import ChatOpenAI
 from src.infrastructure.config import (
     OPENROUTER_BASE_URL,
-    GROQ_BASE_URL
+    GROQ_BASE_URL,
+    CHAT_MODEL, 
+    CHAT_PROVIDER,
+    get_api_key,
+    GROQ_MODEL
 )
 
 def _build_llm(
@@ -36,13 +40,25 @@ def _build_llm(
         llm_kwargs['openai_api_key'] = get_api_key(provider)
 
     elif provider == "groq":
-        llm_kwargs['openai_api_key'] = get_api_key(provider)
         llm_kwargs["openai_api_base"] = GROQ_BASE_URL
+        llm_kwargs['openai_api_key'] = get_api_key(provider)
     
     elif provider == "openai":
         llm_kwargs['openai_api_key'] = get_api_key(provider)
     
 
     return ChatOpenAI(**llm_kwargs)
+
+
+def get_chat_llm(provider: str = "openrouter", temperature: float = 0.0, **kwargs: Any) -> ChatOpenAI:
+    """ Return the chat llm """
+    return _build_llm(
+        model = CHAT_MODEL if provider == "openrouter" else GROQ_MODEL,
+        provider = provider,
+        temperature = temperature,
+        **kwargs
+    )
+
+
 
 

@@ -66,7 +66,8 @@ _MODELS = _load_yaml("models.yaml")
 PROVIDER = _get_nested(_PARAMS, "provider", "default" ,default="openrouter")
 MODEL_TIER = _get_nested(_PARAMS, "provider", "tier", default="general")
 OPENROUTER_BASE_URL = _get_nested(_PARAMS, "provider", "openrouter_base_url", 
-                                    default="https://api.openrouter.ai/v1")
+                                    default="https://openrouter.ai/api/v1")
+
 
 # ===================================
 # Model names (from models.yaml)
@@ -109,7 +110,9 @@ def get_api_key(provider: Optional[str] = None) -> Optional[str]:
         "google": "GOOGLE_API_KEY",
         "groq": "GROQ_API_KEY",
         "deepseek" : "DEEPSEEK_API_KEY",
-        "travily" : "TRAVILY_API_KEY"
+        "travily" : "TRAVILY_API_KEY",
+        "gplace" : "GPLACES_API_KEY",
+        "tavily" : "TAVILAY_API_KEY"
     }
 
     env_var = key_map.get(provider, f"{provider.upper()}_API_KEY")
@@ -120,6 +123,8 @@ ROUTER_PROVIDER = "openrouter"
 
 CHAT_MODEL = "google/gemini-2.5-flash"
 CHAT_PROVIDER = "openrouter"
+
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 EMBEDDING_MODEL = get_embedding_model()
 
